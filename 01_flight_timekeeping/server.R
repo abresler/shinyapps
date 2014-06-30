@@ -4,9 +4,8 @@ library(ggplot2)
 
 # Define server logic required
 shinyServer(function(input, output) {
-  flights <- read.csv("data/timekeeping.transformed.csv")
-  flights$airline_dir_x <- c(with(flights, paste(airline_x,direction_x) ))
-  flights$loc_dir_x <- c(with(flights, paste(location_x,direction_x) ))
+  #flights <- read.csv("data/timekeeping.transformed.csv")
+ 
   
     output$airlinehisttitle <- renderText({ 
       paste("",input$route)
