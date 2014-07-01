@@ -19,15 +19,21 @@ shinyUI(navbarPage(
   ,tabPanel("Airports",
     titlePanel("Airlines @ Airports"),
     sidebarLayout(
-      sidebarPanel("",
-                   fluidRow(helpText("Choose an airport")),
-                   fluidRow(selectInput("airport", label = "",
+      sidebarPanel(""
+                   ,fluidRow(helpText(""))
+                   ,fluidRow(selectInput("airport", label = "",
                                         choices = c("Dublin","London-LGW"),
                                         selected = "London-LGW" ))
+                   ,fluidRow(dateRangeInput("dateRange", 
+                                            label = "",
+                                            start = "2014-05-01",
+                                            end = NULL,
+                                            startview = "year"))
       ),
-      mainPanel(plotOutput("airportHistogram"),
-                h5(textOutput("airportHistTitle"), align = "center"),
-                googleAnalytics()
+      mainPanel(plotOutput("airportHistogram")
+                ,h5(textOutput("airportHistTitle"), align = "center")
+                ,googleAnalytics()
+                ,verbatimTextOutput("dataPrintOut")
       )
     )
   )
@@ -41,9 +47,9 @@ shinyUI(navbarPage(
                                                                 "London Gatwick to Dublin" = "arrivals") ,
                                                  selected = "departures" ))
               ),
-              mainPanel(plotOutput("airlinehist"),
-                        h5(textOutput("airlinehisttitle"), align = "center"),
-                        googleAnalytics()
+              mainPanel(plotOutput("airlineHistogram")
+                        ,h5(textOutput("airlineHistTitle"), align = "center")
+                        ,googleAnalytics()
                         
               )
             )
