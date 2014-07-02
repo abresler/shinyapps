@@ -31,9 +31,7 @@ shinyUI(navbarPage(
                                             startview = "year"))
       ),
       mainPanel(plotOutput("airportHistogram")
-                ,h5(textOutput("airportHistTitle"), align = "center")
                 ,googleAnalytics()
-                ,verbatimTextOutput("dataPrintOut")
       )
     )
   )
@@ -48,7 +46,6 @@ shinyUI(navbarPage(
                                                  selected = "departures" ))
               ),
               mainPanel(plotOutput("airlineHistogram")
-                        ,h5(textOutput("airlineHistTitle"), align = "center")
                         ,googleAnalytics()
                         
               )
