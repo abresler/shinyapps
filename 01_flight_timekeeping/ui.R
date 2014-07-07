@@ -17,7 +17,7 @@ googleAnalytics <- function(account="UA-52253018-1"){
 shinyUI(navbarPage(
   " "
   ,tabPanel("Airports",
-    titlePanel("Airlines @ Airports"),
+    titlePanel("Airlines at Airports"),
     sidebarLayout(
       sidebarPanel(""
                    ,fluidRow(helpText(""))

@@ -9,3 +9,6 @@
 
 # Csv data files
 *.csv
+
+# Shiny Account Details
+*.dcf
