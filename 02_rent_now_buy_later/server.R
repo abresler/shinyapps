@@ -11,27 +11,41 @@
 # 6. I've noticed that the mortgage calculator sometimes returns an extra element. Need to properly test the function
 source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/mortgage.R")
 
+
+
+outcome <- data.frame("year" = c(),
+                              "rent" = c(),
+                              "amount" = c()) 
+
 timeframe <- 20 #years
-mortgageStart <- 0 #year from now
-  # need to check that you don't buy the house so far in the future that you don't pay it all off
+# need to check that you don't buy the house so far in the future that you don't pay it all off
 totalCashInHand <- 150000
 percentCashAsDeposit <- 1
 
 houseprice <- 450000
-rent <- 1200
 mortgageYears <- 20
-mortgageRate <- 6.25
-savingsInterest <- 3.25* (1-.2)
+mortgageRate <- 6
+standardRateTax = .2
+savingsInterest <- 3.25* (1-standardRateTax)
 percentValueChange <- 0
-monthlyCashToPlayWith <- 2100
+monthlyCashToPlayWith <- 2500
+year <- 0:5
 
-overallPosition <- rep(NA,length(0:5))
 
-for (j in 0:5) {
-    
-    mortgageStart <- j
+for (rent in seq(1250,2000,100)) { 
+for (j in year) {
+
+ 
+  mortgageStart <- j + 1
+
+
+
+  
+   
     
     mortgageFreeBeforeMonths <- mortgageStart * 12 
+    print (mortgageStart)
+    print (mortgageFreeBeforeMonths)
     savingsBefore <- rep(monthlyCashToPlayWith-rent, mortgageFreeBeforeMonths) 
     savingsWithIntBefore <- rep(0, mortgageFreeBeforeMonths )
     savingsBefore; savingsWithIntBefore
@@ -54,11 +68,11 @@ for (j in 0:5) {
     
     # We now have the amount of cash on hand in two years
     if ( is.na(savingsWithIntBefore[length(savingsWithIntBefore)]) ) {
-      mortgageAmount <- houseprice - (totalCashInHand * percentCashAsDeposit )  
+      deposit <- (totalCashInHand * percentCashAsDeposit )  
     }else {
-      mortgageAmount <- houseprice - (savingsWithIntBefore[length(savingsWithIntBefore)] * percentCashAsDeposit )
+      deposit <- (savingsWithIntBefore[length(savingsWithIntBefore)] * percentCashAsDeposit )
     }
-    
+    mortgageAmount <- houseprice - deposit
     mortgage(P=mortgageAmount,I=mortgageRate,
              L=min(timeframe-mortgageStart,mortgageYears), # As we delay the length of the mortgage reduces
              # we need to make sure that the monthly payment ! > monthly money available
@@ -82,6 +96,7 @@ for (j in 0:5) {
     propertyInvestmentIn <- c(rep(0, mortgageFreeBeforeMonths) 
                               ,aDFmonth$Monthly_Principal
                               ,rep(0, mortgageFreeAfterMonths))
+    propertyInvestmentIn[mortgageFreeBeforeMonths+1] <- propertyInvestmentIn[mortgageFreeBeforeMonths+1] + deposit
     #plot(propertyInvestmentIn)
     #length(propertyInvestmentIn)
     propertyInvestmentIn <- ( 1 + ( percentValueChange /100) ) * propertyInvestmentIn
@@ -112,19 +127,23 @@ for (j in 0:5) {
     }
     #length(savingsWithInt)
     #plot(savingsWithInt)
- if (j == 0 | j == 1) {   
-     print(j) 
-     print(propertyInvestmentIn)
-     print(savingsWithInt)
-     print(deadMoneyOut) }
+ #if (j == 0 | j == 1) {   
+#      print(j) 
+#      print(propertyInvestmentIn)
+#      print(savingsWithInt)
+#      print(deadMoneyOut) }
     
-    overallPosition[j+1] = 
+    overallPosition = 
     sum(propertyInvestmentIn) +
     savingsWithInt[length(savingsWithInt)] -
     sum(deadMoneyOut) 
-  
+    outcome <- rbind( outcome ,  c(j,rent,overallPosition))
 
 }
 
-plot(overallPosition)
+}
+
+names(outcome) <- c("year","rent","amount")
+ggplot(outcome) + geom_point(aes(x=year,y=amount)) + facet_wrap("rent") + ylim(0,500000)
+ggplot(outcome) + geom_point(aes(x=year,y=amount, colour = rent)) +ylim(0,500000)
 
